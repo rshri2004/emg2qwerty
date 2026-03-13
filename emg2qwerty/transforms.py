@@ -243,3 +243,55 @@ class SpecAugment:
 
         # (..., C, freq, T) -> (T, ..., C, freq)
         return x.movedim(-1, 0)
+
+
+@dataclass
+class GaussianNoise:
+    """ Adds zero-mean Gaussian noise with std proportional to per-channel signal std.
+
+    Args:
+        alpha: alpha * (signal_std per channel) = noise_std
+    """
+    alpha: float = 0.1
+
+    def __call__(self, tensor: torch.Tensor) -> torch.Tensor:
+        signal_std = tensor.std(dim=0, keepdim=True) # get per-channel std
+        noise_std = self.alpha * signal_std
+        noise = (torch.randn_like(tensor, dtype=tensor.dtype, device=tensor.device)* noise_std)
+        return tensor + noise
+
+@dataclass
+class AmplitudeScaling:
+    """Randomly scales the amplitude of the input by a factor uniformly sampled
+    from [min_scale, max_scale].
+
+    Args:
+        min_scale: min scale factor
+        max_scale: max scale factor 
+    """
+    min_scale: float = 0.9
+    max_scale: float = 1.1
+
+    def __call__(self, tensor: torch.Tensor) -> torch.Tensor:
+        scale = np.random.uniform(self.min_scale, self.max_scale)
+        return tensor * scale
+
+
+@dataclass
+class ChannelDropout:
+    """Randomly zeros out electrode channels with probability p_drop
+    
+    Args:
+        p_drop: probability of dropping a channel
+    """
+
+    p_drop: float = 0.1
+    channel_dim = -2 # (,,C,) after LogSpectrogram
+
+    def __call__(self, tensor: torch.Tensor) -> torch.Tensor:
+        C = tensor.shape[self.channel_dim]
+        mask = (torch.rand(C, device=tensor.device, dtype=tensor.dtype) > self.p_drop)
+        view = [1] * tensor.ndim
+        view[self.channel_dim] = -1
+        mask = mask.view(view) # reshapes mask tensor so can broadcast when multiplying with input
+        return tensor * mask
