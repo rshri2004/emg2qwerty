@@ -278,7 +278,7 @@ class TDSConvEncoder(nn.Module):
 
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
         return self.tds_conv_blocks(inputs)  # (T, N, num_features)
-    
+
 
 class LSTMEncoder(nn.Module):
     def __init__(self, in_features, num_layers, hidden_size, num_classes, dropout=0.1, bidirectional=True):

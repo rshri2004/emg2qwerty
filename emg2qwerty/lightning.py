@@ -93,8 +93,9 @@ class WindowedEMGDataModule(pl.LightningDataModule):
                     transform=self.test_transform,
                     # Feed the entire session at once without windowing/padding
                     # at test time for more realism
-                    window_length=None,
-                    padding=(0, 0),
+                    # On second thought nah cuz breaks
+                    window_length=self.window_length,
+                    padding=self.padding,
                     jitter=False,
                 )
                 for hdf5_path in self.test_sessions
@@ -271,7 +272,6 @@ class TDSConvCTCModule(pl.LightningModule):
             optimizer_config=self.hparams.optimizer,
             lr_scheduler_config=self.hparams.lr_scheduler,
         )
-    
 
 
 class LSTMCTCModule(pl.LightningModule):
@@ -355,6 +355,7 @@ class CNNBiLSTMCTCModule(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters()
         num_features = self.NUM_BANDS * mlp_features[-1]
+
         self.model = nn.Sequential(
             SpectrogramNorm(channels=self.NUM_BANDS * self.ELECTRODE_CHANNELS),
             MultiBandRotationInvariantMLP(
@@ -374,6 +375,7 @@ class CNNBiLSTMCTCModule(pl.LightningModule):
             ),
             nn.LogSoftmax(dim=-1),
         )
+
         self.ctc_loss = nn.CTCLoss(blank=charset().null_class)
         self.decoder = instantiate(decoder)
         metrics = MetricCollection([CharacterErrorRates()])
