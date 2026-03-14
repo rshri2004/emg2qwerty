@@ -36,6 +36,7 @@ class LSTMCTCModule(pl.LightningModule):
         mlp_features: Sequence[int],
         hidden_size: int,
         num_layers: int,
+        dropout: float,
         optimizer: DictConfig,
         lr_scheduler: DictConfig,
         decoder: DictConfig,
@@ -61,6 +62,7 @@ class LSTMCTCModule(pl.LightningModule):
             input_size=num_features,
             hidden_size=hidden_size,
             num_layers=num_layers,
+            dropout=dropout if num_layers > 1 else 0,
             bidirectional=False,
             batch_first=False,
         )

@@ -5,6 +5,7 @@ module:
   mlp_features: [384]
   hidden_size: 512 #256
   num_layers: 3
+  dropout: 0.2
 
 datamodule:
   _target_: emg2qwerty.lightning.WindowedEMGDataModule

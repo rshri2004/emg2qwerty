@@ -280,21 +280,6 @@ class TDSConvEncoder(nn.Module):
         return self.tds_conv_blocks(inputs)  # (T, N, num_features)
 
 
-class LSTMEncoder(nn.Module):
-    def __init__(self, in_features, num_layers, hidden_size, num_classes, dropout=0.1, bidirectional=True):
-        super().__init__()
-        self.lstm = nn.LSTM(input_size=in_features, hidden_size=hidden_size, num_layers=num_layers,
-                            dropout=dropout if num_layers > 1 else 0, bidirectional=bidirectional, batch_first=False)
-        out_size = hidden_size * 2 if bidirectional else hidden_size
-        self.classifier = nn.Linear(out_size, num_classes)
-
-    def forward(self, x):
-        T, N, B, C, freq = x.shape
-        x = x.reshape(T, N, B * C * freq)
-        out, _ = self.lstm(x)
-        return self.classifier(out)
-
-
 class CNNBiLSTMEncoder(nn.Module):
     def __init__(self, num_features, block_channels, kernel_width,
                  hidden_size, num_layers, num_classes, dropout=0.2):

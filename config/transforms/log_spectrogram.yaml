@@ -47,7 +47,6 @@ transforms:
     - ${to_tensor}
     - ${band_rotation}
     - ${temporal_jitter}
-    - ${amplitude_scaling}
     - ${logspec}
     - ${specaug}
 
