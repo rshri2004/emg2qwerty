@@ -1,3 +1,70 @@
+# Improving EMG2QWERTY Decoding under Limited Resource Constraints Using Hybrid Architectures and Data Augmentation
+
+UCLA CS Neural Networks and Deep Learning Final Project — Winter 2026
+
+## Team
+- Alice Jung (ahjjung@ucla.edu)
+- Angela Tan (atan9611@g.ucla.edu)
+- Shri Nidhi (srnidhi@g.ucla.edu)
+- Cristobal Velazquez (crisvela@g.ucla.edu)
+
+## Project Overview
+
+We investigate whether explicitly modeling temporal dependencies improves keystroke decoding performance under limited computational resources (single T4 GPU, single user dataset). We compare convolutional, recurrent, and attention-based architectures and evaluate data augmentation techniques and sensor ablations.
+
+### Key Results
+
+| Model | Val CER (%) | Test CER (%) |
+|---|---|---|
+| TDS-CNN (baseline) | 19.21 | 22.28 |
+| LSTM | 27.25 | 28.32 |
+| BiLSTM | 15.49 | 18.10 |
+| TDS-CNN + LSTM | 19.93 | 21.98 |
+| **TDS-CNN + BiLSTM** | **14.75** | **17.86** |
+| Transformer | 44.30 | 48.92 |
+
+Best result: TDS-CNN + BiLSTM with amplitude scaling achieved **16.72% test CER**, a 24.95% reduction compared to the baseline.
+
+## Architectures Implemented
+
+- `TDSConvCTCModule` — Baseline TDS-CNN (provided)
+- `LSTMCTCModule` — Unidirectional LSTM
+- `BiLSTMCTCModule` — Bidirectional LSTM
+- `CNNBiLSTMCTCModule` — TDS-CNN + Bidirectional LSTM hybrid
+- Transformer Encoder
+
+## Training Our Models
+
+### TDS-CNN + BiLSTM (Best Model)
+```bash
+python -m emg2qwerty.train \
+  user="single_user" \
+  model=cnn_bilstm_ctc \
+  trainer.accelerator=gpu trainer.devices=1 \
+  trainer.max_epochs=100
+```
+
+### BiLSTM
+```bash
+python -m emg2qwerty.train \
+  user="single_user" \
+  model=bilstm_ctc \
+  trainer.accelerator=gpu trainer.devices=1 \
+  trainer.max_epochs=100
+```
+
+### LSTM
+```bash
+python -m emg2qwerty.train \
+  user="single_user" \
+  model=lstm_ctc \
+  trainer.accelerator=gpu trainer.devices=1 \
+  trainer.max_epochs=100
+```
+
+---
+
+
 # C147/247 Final Project
 ### Winter 2026 
 
