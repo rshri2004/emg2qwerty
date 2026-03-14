@@ -61,6 +61,7 @@ python -m emg2qwerty.train \
   trainer.accelerator=gpu trainer.devices=1 \
   trainer.max_epochs=100
 ```
+## Report
 
 ---
 
