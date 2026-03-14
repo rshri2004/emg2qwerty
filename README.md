@@ -17,9 +17,9 @@ We investigate whether explicitly modeling temporal dependencies improves keystr
 | Model | Val CER (%) | Test CER (%) |
 |---|---|---|
 | TDS-CNN (baseline) | 19.21 | 22.28 |
-| LSTM | 27.25 | 28.32 |
+| LSTM | 26.87 | 27.80 |
 | BiLSTM | 15.49 | 18.10 |
-| TDS-CNN + LSTM | 19.93 | 21.98 |
+| TDS-CNN + LSTM | 18.49 | 21.61 |
 | **TDS-CNN + BiLSTM** | **14.75** | **17.86** |
 | Transformer | 44.30 | 48.92 |
 
