@@ -62,6 +62,7 @@ python -m emg2qwerty.train \
   trainer.max_epochs=100
 ```
 ## Report
+[View Report](C147_247A_Final_Report.pdf)
 
 ---
 
