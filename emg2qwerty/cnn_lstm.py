@@ -39,6 +39,7 @@ class ConvLSTMCTCModule(pl.LightningModule):
         optimizer: DictConfig,
         lr_scheduler: DictConfig,
         decoder: DictConfig,
+        dropout: float,
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
@@ -67,6 +68,7 @@ class ConvLSTMCTCModule(pl.LightningModule):
             input_size=num_features,
             hidden_size=hidden_size,
             num_layers=num_layers,
+            dropout=dropout if num_layers > 1 else 0,
             bidirectional=False,
             batch_first=False,  # input shape: (T, N, C)
         )
